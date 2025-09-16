@@ -19,13 +19,19 @@ const App = () => {
       <Button onClick={() => setNeutral(neutral+1)} text="neutral"/>
       <Button onClick={() => setBad(bad+1)} text="bad"/>
       <h1>statistics</h1>
-      <Statistics good={good} neutral={neutral} bad={bad} average={average} positive={positive}/>
+      <Statistics good={good} neutral={neutral} bad={bad} average={average} positive={positive} total={total}/>
     </div>
   )
 }
 
 const Statistics = (props) => {
-  
+
+  if (props.total === 0){
+    return (
+      <div>No feedback given</div>
+    )
+  }
+
   return (
     <div>
       <p>good: {props.good}</p>
