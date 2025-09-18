@@ -19,13 +19,24 @@ const App = () => {
     setSelected(indeksi)
   }
 
+  const [vote, setVote] = useState(Array(anecdotes.length).fill(0))
+  const handleVote = () => {
+    const copy = [...vote]
+    copy[selected] += 1
+    setVote(copy)
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button onClick={() => getRandom(anecdotes)} text="rändöm"/>
+      <Button onClick={() => handleVote()} text="vote"/>
+      <Button onClick={() => getRandom(anecdotes)} text="next anecdote"/>
+      <p>ääniä: {vote[selected]}</p>
     </div>
   )
 }
+
+
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
