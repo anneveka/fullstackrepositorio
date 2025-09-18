@@ -28,15 +28,32 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <Button onClick={() => handleVote()} text="vote"/>
       <Button onClick={() => getRandom(anecdotes)} text="next anecdote"/>
       <p>ääniä: {vote[selected]}</p>
+      <h1>Anecdote with most votes</h1>
+      <Eniten anecdotes={anecdotes} vote={vote}/>
     </div>
   )
 }
 
+const Eniten = (props) => {
+  var suurin = 0
+  for (let i = 0; i<=props.vote.length; i++){
+    if (props.vote[i]>props.vote[suurin]){
+      suurin = i
+    }
+  }
 
+  return (
+    <div>
+      <p>{props.anecdotes[suurin]}</p>
+      <p>has {props.vote[suurin]} votes</p>
+    </div>
+  )
+}
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
