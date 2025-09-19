@@ -17,6 +17,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Kukkuu',
+        exercises: 40,
+        id: 4
       }
     ]
   }
@@ -56,6 +61,7 @@ const Content = (props) => {
           <Part key={part.id} part={part}/>
         )}
       </ul>
+      <Total part={course.parts}/>
     </div>
   )
 
@@ -65,6 +71,21 @@ const Part = ({part}) => {
   return(
     <li>{part.name} {part.exercises} </li>
   )
+}
+
+const Total = (props) => {
+    const {part} = props
+
+    const a = 0
+    const summa = part.reduce(
+      (summaNyt, seuraava) => summaNyt + seuraava.exercises, a,
+    )
+
+    return (
+      <div>
+        <p><b>total of {summa} exercises</b></p>
+      </div>
+    )
 }
 
 export default App
