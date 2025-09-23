@@ -36,22 +36,46 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with <input value={search} onChange={handleSearch}></input></div>
+      <Filter search={search} handleSearch={handleSearch} />
       <h2>add a new</h2>
-      <form onSubmit={addNameAndNumber}>
-        <div>name: <input value={newName} onChange={handleName}/></div>
-        <div>number: <input value={newNumber} onChange={handleNumber}/></div>
-        <button type="submit">add</button>
-      </form>
-      <h2>Numbers</h2>
+      <PersonForm 
+        newName={newName} handleName={handleName} 
+        newNumber={newNumber} handleNumber={handleNumber}
+        addNameAndNumber={addNameAndNumber}
+      />
+      <h3>Numbers</h3>
       <p>
         {filteredPersons.map(person =>
-          <li key={person.name}>{person.name} {person.number}</li>
+           <Persons key={person.name} person={person}/>
         )}
       </p>
     </div>
   )
 
+}
+
+const Persons = ({person}) => {
+  return (
+    <li>{person.name} {person.number}</li>
+  )
+}
+
+const PersonForm = (props) => {
+  return(
+    <form onSubmit={props.addNameAndNumber}>
+      <div>name: <input value={props.newName} onChange={props.handleName}/></div>
+      <div>number: <input value={props.newNumber} onChange={props.handleNumber}/></div>
+      <button type="submit">add</button>
+    </form>
+  )
+}
+
+const Filter = ({search, handleSearch}) => {
+  return(
+  <div>
+    filter shown with <input value={search} onChange={handleSearch} />
+  </div>
+  )
 }
 
 export default App
