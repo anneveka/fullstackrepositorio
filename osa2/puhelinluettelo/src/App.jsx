@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { createWebSocketModuleRunnerTransport } from 'vite/module-runner'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -23,9 +24,13 @@ const App = () => {
     if (persons.some(person => person.name === newName || person.number === newNumber)) { //tarkistetaan onko numeroa tai nimeä jo kirjoilla
       alert(`${newName} is already added to phonebook`) 
     } else{
-      setPersons(persons.concat(nameObject))
-      setNewName('') 
-      setNewNumber('')
+      axios
+        .post('http://localhost:3001/persons', nameObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
   const filteredPersons = persons.filter(person =>
