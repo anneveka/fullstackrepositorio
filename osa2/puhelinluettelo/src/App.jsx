@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import noteService from './services/persons'
 import { createWebSocketModuleRunnerTransport } from 'vite/module-runner'
 
 const App = () => {
@@ -9,10 +9,11 @@ const App = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
+    noteService
+      .getAll()
+      .then(response => {
+        setPersons(response.data)
+      })
   }, [])
 
   const addNameAndNumber = (event) => {
@@ -24,8 +25,8 @@ const App = () => {
     if (persons.some(person => person.name === newName || person.number === newNumber)) { //tarkistetaan onko numeroa tai nimeä jo kirjoilla
       alert(`${newName} is already added to phonebook`) 
     } else{
-      axios
-        .post('http://localhost:3001/persons', nameObject)
+      noteService
+        .create(nameObject)
         .then(response => {
           setPersons(persons.concat(response.data))
           setNewName('')
