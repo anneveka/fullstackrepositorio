@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import noteService from './services/persons'
+import personService from './services/persons'
 import { createWebSocketModuleRunnerTransport } from 'vite/module-runner'
+import axios from 'axios'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -9,7 +10,7 @@ const App = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(response => {
         setPersons(response.data)
@@ -25,7 +26,7 @@ const App = () => {
     if (persons.some(person => person.name === newName || person.number === newNumber)) { //tarkistetaan onko numeroa tai nimeä jo kirjoilla
       alert(`${newName} is already added to phonebook`) 
     } else{
-      noteService
+      personService
         .create(nameObject)
         .then(response => {
           setPersons(persons.concat(response.data))
@@ -55,7 +56,7 @@ const App = () => {
       <h3>Numbers</h3>
       <p>
         {filteredPersons.map(person =>
-           <Persons key={person.name} person={person}/>
+           <Persons key={person.name} person={person} setPersons={setPersons}/>
         )}
       </p>
     </div>
@@ -63,9 +64,25 @@ const App = () => {
 
 }
 
-const Persons = ({person}) => {
+
+const Persons = (props) => {
+
+  const deletePerson = () => {
+    if(confirm(`Delete ${props.person.name}?`)) {
+    personService
+      .remove(props.person.id)
+      .then(response => {
+        props.setPersons(theRest => 
+          theRest.filter(person => person.id !== props.person.id)
+        )
+      })
+    }
+  }
+
   return (
-    <li>{person.name} {person.number}</li>
+    <li>
+      {props.person.name} {props.person.number}  <button onClick={() => deletePerson()}>delete</button>
+    </li>
   )
 }
 
