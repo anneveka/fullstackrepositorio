@@ -23,9 +23,24 @@ const App = () => {
       name: newName, //määritellään uusi nimi
       number: newNumber // ja numero
     }
-    if (persons.some(person => person.name === newName || person.number === newNumber)) { //tarkistetaan onko numeroa tai nimeä jo kirjoilla
+
+    if (persons.some(person => person.name === newName && person.number === newNumber)) { //tarkistetaan onko numeroa tai nimeä jo kirjoilla
       alert(`${newName} is already added to phonebook`) 
-    } else{
+    } 
+    
+    const person = persons.find(person => person.name === newName)
+    if (persons.some(person => person.name === newName && person.number !== newNumber)) {
+      if(confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        personService
+          .update(person.id, nameObject)
+          .then(response => {
+          setPersons(persons.map(p => p.id !== person.id ? p : response.data))
+          setNewName('')
+          setNewNumber('')
+        })
+      }
+    }
+    else{
       personService
         .create(nameObject)
         .then(response => {
@@ -35,6 +50,7 @@ const App = () => {
         })
     }
   }
+
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(search.toLowerCase()) //filteröidään hakuun sopivat nimet
   )
