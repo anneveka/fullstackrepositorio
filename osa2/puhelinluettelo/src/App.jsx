@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import personService from './services/persons'
 import { createWebSocketModuleRunnerTransport } from 'vite/module-runner'
 import axios from 'axios'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [infoMessage, setInfoMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -37,6 +39,7 @@ const App = () => {
           setPersons(persons.map(p => p.id !== person.id ? p : response.data))
           setNewName('')
           setNewNumber('')
+          setInfoMessage(`Changed ${newName}'s number`)
         })
       }
     }
@@ -48,6 +51,7 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        setInfoMessage(`Added ${newName}`)
     }
   }
 
@@ -62,6 +66,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={infoMessage} />
       <Filter search={search} handleSearch={handleSearch} />
       <h2>add a new</h2>
       <PersonForm 
@@ -72,7 +77,7 @@ const App = () => {
       <h3>Numbers</h3>
       <p>
         {filteredPersons.map(person =>
-           <Persons key={person.name} person={person} setPersons={setPersons}/>
+           <Persons key={person.name} person={person} setPersons={setPersons} setInfoMessage={setInfoMessage}/>
         )}
       </p>
     </div>
@@ -92,6 +97,7 @@ const Persons = (props) => {
           theRest.filter(person => person.id !== props.person.id)
         )
       })
+      props.setInfoMessage(`Removed ${props.person.name}`)
     }
   }
 
@@ -117,6 +123,15 @@ const Filter = ({search, handleSearch}) => {
   <div>
     filter shown with <input value={search} onChange={handleSearch} />
   </div>
+  )
+}
+
+const Notification = ({message}) => {
+  if (message === null) {return null}
+  return (
+    <div className='ilmoitus'>
+      {message}
+    </div>
   )
 }
 
