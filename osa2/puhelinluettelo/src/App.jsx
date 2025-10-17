@@ -10,6 +10,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   const [infoMessage, setInfoMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -35,11 +36,20 @@ const App = () => {
       if(confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         personService
           .update(person.id, nameObject)
+          .catch(error => {
+            setErrorMessage(`Information of ${person.name} has already been removed from server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
           .then(response => {
           setPersons(persons.map(p => p.id !== person.id ? p : response.data))
           setNewName('')
           setNewNumber('')
           setInfoMessage(`Changed ${newName}'s number`)
+          setTimeout(() => {
+            setInfoMessage(null)
+          }, 5000)
         })
       }
     }
@@ -52,6 +62,9 @@ const App = () => {
           setNewNumber('')
         })
         setInfoMessage(`Added ${newName}`)
+        setTimeout(() => {
+            setInfoMessage(null)
+        }, 5000)
     }
   }
 
@@ -67,6 +80,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={infoMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter search={search} handleSearch={handleSearch} />
       <h2>add a new</h2>
       <PersonForm 
@@ -98,6 +112,9 @@ const Persons = (props) => {
         )
       })
       props.setInfoMessage(`Removed ${props.person.name}`)
+      setTimeout(() => {
+          props.setInfoMessage(null)
+      }, 5000)
     }
   }
 
@@ -134,5 +151,15 @@ const Notification = ({message}) => {
     </div>
   )
 }
+
+const ErrorNotification = ({message}) => {
+  if (message === null) {return null}
+  return (
+    <div className='error'>
+      {message}
+    </div>
+  )
+}
+
 
 export default App
