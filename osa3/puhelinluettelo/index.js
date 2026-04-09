@@ -45,6 +45,13 @@ app.get("/api/persons/:id", (request, response) => {
     }
 });
 
+app.get("/info", (request, response) => {
+    response.writeHead(200, { "Content-Type": "text/plain" });
+    response.end(
+        "Phonebook has info for " + persons.length + " people\n" + new Date(),
+    );
+});
+
 const generateId = () => {
     const maxId =
         persons.length > 0 ? Math.max(...persons.map((p) => Number(p.id))) : 0;
