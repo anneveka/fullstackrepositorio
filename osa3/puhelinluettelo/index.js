@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 
 let persons = [
     {
@@ -96,6 +97,8 @@ app.post("/api/persons", (request, response) => {
 
     response.json(person);
 });
+
+app.use(morgan("tiny"));
 
 const PORT = 3001;
 app.listen(PORT, () => {
