@@ -60,7 +60,7 @@ const App = () => {
                     .then((response) => {
                         setPersons(
                             persons.map((p) =>
-                                p.id !== person.id ? p : response.data,
+                                p.id !== person.id ? p : response,
                             ),
                         );
                         setNewName("");
@@ -132,7 +132,10 @@ const Persons = (props) => {
         if (confirm(`Delete ${props.person.name}?`)) {
             personService.remove(props.person.id).then((response) => {
                 props.setPersons((theRest) =>
-                    theRest.filter((person) => person.id !== props.person.id),
+                    theRest.filter(
+                        (person) =>
+                            (person.id || person._id) !== props.person.id,
+                    ),
                 );
             });
             props.setInfoMessage(`Removed ${props.person.name}`);
