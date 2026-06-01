@@ -16,9 +16,9 @@ const requestLogger = (request, response, next) => {
     next();
 };
 
-app.use(requestLogger);
-app.use(express.json());
 app.use(express.static("dist"));
+app.use(express.json());
+app.use(requestLogger);
 
 app.get("/", (request, response) => {
     response.send("<h1>Hello World!</h1>");
@@ -34,13 +34,6 @@ app.get("/api/persons/:id", (request, response) => {
     Person.findById(request.params.id).then((person) => {
         response.json(person);
     });
-});
-
-app.delete("/api/persons/:id", (request, response) => {
-    const id = request.params.id;
-    persons = persons.filter((person) => person.id !== id);
-
-    response.status(204).end();
 });
 
 const generateId = () => {
@@ -65,6 +58,14 @@ app.post("/api/persons", (request, response) => {
     person.save().then((savedPerson) => {
         response.json(savedPerson);
     });
+});
+
+app.delete("/api/persons/:id", (request, response, next) => {
+    Person.findByIdAndDelete(request.params.id)
+        .then((result) => {
+            response.status(204).end();
+        })
+        .catch((error) => next(error));
 });
 
 const PORT = process.env.PORT;
