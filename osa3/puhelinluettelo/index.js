@@ -52,6 +52,20 @@ app.get("/api/persons/:id", (request, response, next) => {
         .catch((error) => next(error));
 });
 
+app.get("/info", (request, response, next) => {
+    Person.find({})
+        .then((persons) => {
+            response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end(
+                "Phonebook has info for " +
+                    persons.length +
+                    " people\n" +
+                    new Date(),
+            );
+        })
+        .catch((error) => next(error));
+});
+
 app.post("/api/persons", (request, response) => {
     const body = request.body;
 
