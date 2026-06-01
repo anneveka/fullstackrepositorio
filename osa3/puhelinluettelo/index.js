@@ -52,11 +52,6 @@ app.get("/api/persons/:id", (request, response, next) => {
         .catch((error) => next(error));
 });
 
-const generateId = () => {
-    const randomId = Math.floor(Math.random() * 1000000);
-    return String(randomId);
-};
-
 app.post("/api/persons", (request, response) => {
     const body = request.body;
 
@@ -76,6 +71,25 @@ app.post("/api/persons", (request, response) => {
     });
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+    const { name, number } = request.body;
+
+    Person.findById(request.params.id)
+        .then((person) => {
+            if (!person) {
+                return response.status(404).end();
+            }
+
+            person.name = name;
+            person.number = number;
+
+            return person.save().then((updatedPerson) => {
+                response.json(updatedPerson);
+            });
+        })
+        .catch((error) => next(error));
+});
+
 app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then((result) => {
@@ -84,6 +98,11 @@ app.delete("/api/persons/:id", (request, response, next) => {
         .catch((error) => next(error));
 });
 
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
