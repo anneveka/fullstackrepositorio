@@ -72,15 +72,26 @@ const App = () => {
                     });
             }
         } else {
-            personService.create(nameObject).then((response) => {
-                setPersons(persons.concat(response));
-                setNewName("");
-                setNewNumber("");
-            });
-            setInfoMessage(`Added ${newName}`);
-            setTimeout(() => {
-                setInfoMessage(null);
-            }, 5000);
+            personService
+                .create(nameObject)
+                .then((response) => {
+                    setPersons(persons.concat(response));
+                    setNewName("");
+                    setNewNumber("");
+
+                    setInfoMessage(`Added ${newName}`);
+                    setTimeout(() => {
+                        setInfoMessage(null);
+                    }, 5000);
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+
+                    setErrorMessage(error.response.data.error);
+                    setTimeout(() => {
+                        setErrorMessage(null);
+                    }, 5000);
+                });
         }
     };
 
