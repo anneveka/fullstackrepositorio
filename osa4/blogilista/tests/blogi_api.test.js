@@ -52,6 +52,15 @@ test("a specific blog is within the returned blogs", async () => {
     assert(titles.includes("Reactin perusteet"));
 });
 
+test.only("indentifier property of the blog posts is named id", async () => {
+    const response = await api.get("/api/blogs");
+
+    response.body.forEach((blog) => {
+        assert(blog.id !== undefined);
+        assert(blog._id === undefined);
+    });
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
