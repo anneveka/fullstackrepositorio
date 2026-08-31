@@ -52,13 +52,36 @@ test("a specific blog is within the returned blogs", async () => {
     assert(titles.includes("Reactin perusteet"));
 });
 
-test.only("indentifier property of the blog posts is named id", async () => {
+test("indentifier property of the blog posts is named id", async () => {
     const response = await api.get("/api/blogs");
 
     response.body.forEach((blog) => {
         assert(blog.id !== undefined);
         assert(blog._id === undefined);
     });
+});
+
+test("a valid blog can be added ", async () => {
+    const newBlog = {
+        title: "Testiblogi",
+        author: "Testaaja",
+        url: "https://testi.com",
+        likes: 0,
+    };
+
+    await api
+        .post("/api/blogs")
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+    const response = await api.get("/api/blogs");
+
+    const contents = response.body.map((r) => r.title);
+
+    assert.strictEqual(response.body.length, initialBlogs.length + 1);
+
+    assert(contents.includes("Testiblogi"));
 });
 
 after(async () => {
