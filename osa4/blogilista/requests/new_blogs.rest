@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFubmFhIiwiaWQiOiI2YTllOGUxNjczYzA1NjhhYjdiNTgyOWUiLCJpYXQiOjE3ODg3ODI3MTd9.d4XDOJnOAGVpVR9a73duxgmmhrqMnTudFWHf5y-OjI0
 
 {
     "title": "Reactin perusteet",
