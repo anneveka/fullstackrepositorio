@@ -129,6 +129,54 @@ test("blog can be updated", async () => {
     assert.strictEqual(blogAtEnd.likes, blogToUpdate.likes + 1);
 });
 
+test("creating invalid user fails with proper status code and message", async () => {
+    const usersAtStart = await User.find({});
+
+    const newUser = {
+        username: "ab",
+        name: "Test User",
+        password: "password123",
+    };
+
+    const result = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+    assert(
+        result.body.error.includes(
+            "username must be at least 3 characters long",
+        ),
+    );
+
+    const usersAtEnd = await User.find({});
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+});
+
+test("username must be unique", async () => {
+    const usersAtStart = await User.find({});
+
+    const newUser = {
+        username: "anna",
+        name: "Test User",
+        password: "password123",
+    };
+
+    await api.post("/api/users").send(newUser).expect(201);
+
+    const result = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+    assert(result.body.error.includes("expected `username` to be unique"));
+
+    const usersAtEnd = await User.find({});
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
