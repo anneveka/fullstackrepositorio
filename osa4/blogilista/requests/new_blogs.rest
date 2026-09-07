@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Reactin alkeet",
-    "author": "Matti Muukalainen",
+    "title": "Reactin perusteet",
+    "author": "Matti Meikäläinen",
     "url": "https://react.dev",
-    "likes": 10
+    "likes": 30,
+    "userId": "6a9e6c2ae99dc581f620ec76"
 }
