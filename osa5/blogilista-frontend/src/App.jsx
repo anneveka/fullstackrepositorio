@@ -17,6 +17,7 @@ const App = () => {
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const [infoMessage, setInfoMessage] = useState(null);
+    const [likes, setLikes] = useState("");
 
     useEffect(() => {
         blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -38,6 +39,8 @@ const App = () => {
             title: title,
             author: author,
             url: url,
+            user: user,
+            likes: likes,
         };
 
         blogService.create(blogObject).then((returnedBlog) => {
@@ -130,14 +133,14 @@ const App = () => {
             {user && (
                 <div>
                     <p>
-                        {user.name} logged in
+                        {user.name} logged in{" "}
                         <button onClick={() => handleLogout()}>logout</button>
                     </p>{" "}
                     {blogForm()}
                 </div>
             )}
             {blogs.map((blog) => (
-                <Blog key={blog.id} blog={blog} />
+                <Blog key={blog.id} blog={blog} user={user} />
             ))}
         </div>
     );
