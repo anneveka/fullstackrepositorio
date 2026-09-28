@@ -1,38 +1,38 @@
 const BlogForm = ({
-    handleSubmit,
-    handleTitleChange,
-    handleAuthorChange,
-    handleUrlChange,
-    title,
-    author,
-    url,
+  handleSubmit,
+  handleTitleChange,
+  handleAuthorChange,
+  handleUrlChange,
+  title,
+  author,
+  url,
 }) => {
-    return (
+  return (
+    <div>
+      <h2>create new</h2>
+      <form onSubmit={handleSubmit}>
         <div>
-            <h2>create new</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
+          <label>
                         title:
-                        <input value={title} onChange={handleTitleChange} />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        author:
-                        <input value={author} onChange={handleAuthorChange} />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        url:
-                        <input value={url} onChange={handleUrlChange} />
-                    </label>
-                </div>
-                <button type="submit">create</button>
-            </form>
+            <input value={title} onChange={handleTitleChange} />
+          </label>
         </div>
-    );
-};
+        <div>
+          <label>
+                        author:
+            <input value={author} onChange={handleAuthorChange} />
+          </label>
+        </div>
+        <div>
+          <label>
+                        url:
+            <input value={url} onChange={handleUrlChange} />
+          </label>
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
+  )
+}
 
-export default BlogForm;
+export default BlogForm
