@@ -90,6 +90,11 @@ const App = () => {
         blogService.setToken(null);
     };
 
+    const addLike = async (id, blogObject) => {
+        const updatedBlog = await blogService.update(id, blogObject);
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+    };
+
     const loginForm = () => (
         <form onSubmit={handleLogin}>
             <div>
@@ -140,7 +145,7 @@ const App = () => {
                 </div>
             )}
             {blogs.map((blog) => (
-                <Blog key={blog.id} blog={blog} user={user} />
+                <Blog key={blog.id} blog={blog} addLike={addLike} />
             ))}
         </div>
     );
