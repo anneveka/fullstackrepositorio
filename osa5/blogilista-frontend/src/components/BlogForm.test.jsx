@@ -21,9 +21,9 @@ test("calls change and send handlers", async () => {
         />,
     );
 
-    const titleInput = screen.getByLabelText("title:");
-    const authorInput = screen.getByLabelText("author:");
-    const urlInput = screen.getByLabelText("url:");
+    const titleInput = screen.getByLabelText("title");
+    const authorInput = screen.getByLabelText("author");
+    const urlInput = screen.getByLabelText("url");
 
     await user.type(titleInput, "Reaktin alkeet");
     await user.type(authorInput, "Matti Meikäläinen");
