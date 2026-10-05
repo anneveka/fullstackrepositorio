@@ -1,55 +1,45 @@
-import { useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
-const Blog = ({ blog, user, addLike, deleteBlog }) => {
-    const blogStyle = {
-        paddingTop: 10,
-        paddingLeft: 2,
-        border: "solid",
-        borderWidth: 1,
-        marginBottom: 5,
-    };
+const Blog = ({ blog, addLike, deleteBlog, loggedIn }) => {
+    const id = useParams().id;
+    const navigate = useNavigate();
 
-    const [visible, setVisible] = useState(false);
-    const hideWhenVisible = { display: visible ? "none" : "" };
-    const showWhenVisible = { display: visible ? "" : "none" };
-
-    const showBlogs = () => {
-        setVisible(!visible);
-    };
+    if (!blog) {
+        return null;
+    }
 
     const handleLike = () => {
-        const updatedBlog = {
-            ...blog,
-            likes: blog.likes + 1,
-        };
-
-        addLike(blog.id, updatedBlog);
+        if (loggedIn === true) {
+            const updatedBlog = {
+                ...blog,
+                likes: blog.likes + 1,
+            };
+            addLike(id, updatedBlog);
+        }
     };
 
     const handleDelete = () => {
-        if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            deleteBlog(blog.id);
+        if (window.confirm(`Delete blog "${blog.title}"?`)) {
+            deleteBlog(id);
+            navigate("/");
         }
     };
 
     return (
-        <div style={blogStyle}>
-            <div style={hideWhenVisible}>
-                {blog.title} {blog.author}{" "}
-                <button onClick={showBlogs}>view</button>
-            </div>
-            <div style={showWhenVisible}>
-                {blog.title} {blog.author}{" "}
-                <button onClick={showBlogs}>hide</button>
+        <div>
+            <li>
+                <h2>
+                    {blog.author}: {blog.title}
+                </h2>
                 <br />
-                {blog.url}
+                <Link to={blog.url}>{blog.url}</Link>
                 <br />
                 likes {blog.likes} <button onClick={handleLike}>like</button>
                 <br />
-                {blog.user.name}
+                Added by {blog.user.name}
                 <br />
                 <button onClick={handleDelete}>remove</button>
-            </div>
+            </li>
         </div>
     );
 };

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import blogService from "./services/blogs";
 import BlogList from "./components/BlogList";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useMatch } from "react-router-dom";
 import LogInForm from "./components/LogInForm";
+import Blog from "./components/Blog";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -27,6 +28,12 @@ const App = () => {
         padding: 5,
     };
 
+    const match = useMatch("/:id");
+
+    const blog = match
+        ? blogs.find((blog) => blog.id === match.params.id)
+        : null;
+
     const handleLogout = () => {
         window.localStorage.removeItem("loggedBlogappUser");
         setUser(null);
@@ -34,9 +41,19 @@ const App = () => {
         console.log(user);
     };
 
+    const addLike = async (id, blogObject) => {
+        await blogService.update(id, blogObject);
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : blogObject)));
+    };
+
+    const deleteBlog = async (id) => {
+        await blogService.deleteBlog(id);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+    };
+
     if (user === null) {
         return (
-            <Router>
+            <>
                 <div>
                     <Link style={padding} to="/">
                         blogs
@@ -64,13 +81,24 @@ const App = () => {
                         }
                     />
                     <Route path="/" element={<BlogList blogs={blogs} />} />
+                    <Route
+                        path="/:id"
+                        element={
+                            <Blog
+                                blog={blog}
+                                addLike={addLike}
+                                deleteBlog={deleteBlog}
+                                loggedIn={false}
+                            />
+                        }
+                    />
                 </Routes>
-            </Router>
+            </>
         );
     }
 
     return (
-        <Router>
+        <>
             <div>
                 <Link style={padding} to="/">
                     blogs
@@ -79,8 +107,19 @@ const App = () => {
             </div>
             <Routes>
                 <Route path="/" element={<BlogList blogs={blogs} />} />
+                <Route
+                    path="/:id"
+                    element={
+                        <Blog
+                            blog={blog}
+                            addLike={addLike}
+                            deleteBlog={deleteBlog}
+                            loggedIn={true}
+                        />
+                    }
+                />
             </Routes>
-        </Router>
+        </>
     );
 };
 export default App;
