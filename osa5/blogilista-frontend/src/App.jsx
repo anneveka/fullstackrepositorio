@@ -4,6 +4,7 @@ import BlogList from "./components/BlogList";
 import { Routes, Route, Link, useMatch } from "react-router-dom";
 import LogInForm from "./components/LogInForm";
 import Blog from "./components/Blog";
+import BlogForm from "./components/BlogForm";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -49,6 +50,20 @@ const App = () => {
     const deleteBlog = async (id) => {
         await blogService.deleteBlog(id);
         setBlogs(blogs.filter((blog) => blog.id !== id));
+    };
+
+    const addBlog = (blogObject) => {
+        blogService.create(blogObject).then((returnedBlog) => {
+            const completeBlog = {
+                ...returnedBlog,
+                user: {
+                    id: returnedBlog.user,
+                    name: user.name,
+                    username: user.username,
+                },
+            };
+            setBlogs(blogs.concat(completeBlog));
+        });
     };
 
     if (user === null) {
@@ -103,6 +118,9 @@ const App = () => {
                 <Link style={padding} to="/">
                     blogs
                 </Link>
+                <Link style={padding} to="/create">
+                    new blog
+                </Link>
                 <button onClick={() => handleLogout()}>logout</button>
             </div>
             <Routes>
@@ -117,6 +135,10 @@ const App = () => {
                             loggedIn={true}
                         />
                     }
+                />
+                <Route
+                    path="/create"
+                    element={<BlogForm createBlog={addBlog} />}
                 />
             </Routes>
         </>
