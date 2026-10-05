@@ -103,7 +103,7 @@ const App = () => {
                                 blog={blog}
                                 addLike={addLike}
                                 deleteBlog={deleteBlog}
-                                loggedIn={false}
+                                user={null}
                             />
                         }
                     />
@@ -132,7 +132,7 @@ const App = () => {
                             blog={blog}
                             addLike={addLike}
                             deleteBlog={deleteBlog}
-                            loggedIn={true}
+                            user={user}
                         />
                     }
                 />
